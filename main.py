@@ -10,29 +10,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 db.init_app(app)
 
 
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-        return d
-
-def get_data(querry: str) -> object:
-    conn = sqlite3.connect('db1.db')
-    conn.row_factory = dict_factory
-    cursor = conn.execute(querry)
-    result = cursor.fetchall()
-    conn.close()
-    return result
-
-def add_data(querry: str):
-    conn = sqlite3.connect('db1.db')
-    cursor = conn.cursor()
-    cursor.execute(querry)
-    conn.commit()
-    conn.close()
-
-
-
 @app.get('/currency/<currency_UPS>')
 def currency_list(currency_UPS):
     res = Currency.query.filter_by(name=currency_UPS).all()
