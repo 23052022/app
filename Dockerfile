@@ -2,6 +2,6 @@ FROM python:3.10.6
 COPY./requirements.txt/app/requirements.txt
 WORKDIR/app
 RUN pip install -r requirements.txt
-COPY./app
+COPY. /app
 CMD["python", "./app.py"]
 
