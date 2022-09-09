@@ -1,12 +1,13 @@
 from flask import Flask
 from flask import request
+import os
 import sqlite3
 import datetime
 from models import Account, Rating, Deposit, Currency, TransactionHistory, User
 from models import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db_connect')
 db.init_app(app)
 
 

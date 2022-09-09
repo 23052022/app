@@ -2,9 +2,9 @@ version: "3.9"
 services:
   web:
     environment:
-      POSTGRES_PASSWORD: example
-    build:
-      ports:
+      db_connect: 'postgresql://postgres:example@pg:5432/mydatabase'
+    build: .
+    ports:
         - "5000:5000"
   db:
     image: "postgres"
