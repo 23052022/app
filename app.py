@@ -1,14 +1,17 @@
 from flask import Flask
 from flask import request
 import os
-import sqlite3
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import datetime
+import models
 from models import Account, Rating, Deposit, Currency, TransactionHistory, User
 from models import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db_connect')
 db.init_app(app)
+migrate = Migrate(app, db)
 
 
 @app.get('/currency/<currency_UPS>')
@@ -114,4 +117,4 @@ def user_history(user):
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='0.0.0.0', port=5000)

@@ -1,8 +1,12 @@
 FROM python:3.10.6
+
 WORKDIR /app
-COPY ./requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
-COPY. /app
+COPY ./requirments.txt /app/requirments.txt
+
+RUN pip install -r requirments.txt
+
+COPY . /app
 EXPOSE 5000
-CMD["python", "./main.py"]
+
+CMD [ "python", "./app.py" ]
 
