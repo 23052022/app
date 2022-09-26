@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Account(db.Model):
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
@@ -14,6 +15,7 @@ class Account(db.Model):
             'self.balance': self.balance,
             'self.currency_name': self.currency_name
         }
+
 
 class Currency(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -30,6 +32,7 @@ class Currency(db.Model):
             'self.date': self.date
         }
 
+
 class Deposit(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     user_id = db.Column(db.Integer(), nullable=False)
@@ -38,7 +41,6 @@ class Deposit(db.Model):
     balance = db.Column(db.Integer, nullable=False)
     interest_rate = db.Column(db.Numeric, nullable=False)
     conditions = db.Column(db.Text, nullable=False)
-
 
     def to_dict(self):
         return {
@@ -50,6 +52,8 @@ class Deposit(db.Model):
             'self.conditions': self.conditions
 
         }
+
+
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     currency_name = db.Column(db.Text, nullable=False)
@@ -62,6 +66,7 @@ class Rating(db.Model):
             'self.rating': self.rating,
             'self.comment': self.comment
         }
+
 
 class TransactionHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -82,14 +87,15 @@ class TransactionHistory(db.Model):
             'self.currency_num_obtained': self.currency_num_obtained,
             "self.date_time": self.date_time,
             'self.account_from_which_the_transaction': self.account_from_which_the_transaction,
-            "self. account_on_which_the_transaction": self. account_on_which_the_transaction,
-            'self. commission': self. commission
+            "self. account_on_which_the_transaction": self.account_on_which_the_transaction,
+            'self. commission': self.commission
         }
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     login = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
-
 
     def to_dict(self):
         return {

@@ -1,17 +1,24 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask import request
 import os
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import datetime
-import models
 from models import Account, Rating, Deposit, Currency, TransactionHistory, User
 from models import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db_connect')
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:example@localhost:5432/postgres"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, render_as_batch=True)
+
+
+@app.route('/', methods=['GET'])
+def index() -> str:
+    """
+    Start page display with instruction
+    """
+    return render_template('index.html', title='Change for you')
 
 
 @app.get('/currency/<currency_UPS>')
@@ -19,10 +26,12 @@ def currency_list(currency_UPS):
     res = Currency.query.filter_by(name=currency_UPS).all()
     return [it.to_dict() for it in res]
 
+
 @app.get('/currency/<currency_UPS>/rating')
 def currency_rating(currency_UPS):
     res = Rating.query.filter_by(currency_name=currency_UPS).all()
     return [it.to_dict() for it in res]
+
 
 @app.get('/currency')
 def all_currency_rating():
@@ -38,8 +47,6 @@ def course_ups1_to_ups2(currency_UPS1, currency_UPS2):
     return {'exchange': f"res.USD_relative_value / res1.USD_relative_value"}
 
 
-
-
 @app.get('/user/<user_id>')
 def login_get(user_id):
     res = User.query.filter_by(login=user_id).first()
@@ -48,8 +55,6 @@ def login_get(user_id):
 
 @app.post('/currency/trade/<currency_UPS1>/<currency_UPS2>')
 def exchange(currency_UPS1, currency_UPS2):
-
-
     req = request.json
     date_now = datetime.datetime.now().strftime("%d-%m-%Y")
     amount = req['data']['amount']
@@ -60,7 +65,6 @@ def exchange(currency_UPS1, currency_UPS2):
     cur2_USD_relative_value = Currency.query.filter_by(name=currency_UPS2, date=date_now).first()
 
     need_cur2 = amount * cur1_USD_relative_value.USD_relative_value / cur2_USD_relative_value.USD_relative_value
-
 
     if user_balance2.balance > need_cur2 and cur1_USD_relative_value.available_quantity > amount:
         user_balance2.balance = user_balance2.balance - need_cur2
@@ -102,18 +106,15 @@ def currency_review_gelete(name):
     return f'Review currency {name}, DELETE method'
 
 
-
 @app.post('/user/transfer')
 def transfer():
-   pass
+    pass
 
 
 @app.get('/user/<user>/history')
 def user_history(user):
-
     res = TransactionHistory.query.filter_by(user_id=user).all()
     return [it.to_dict() for it in res]
-
 
 
 if __name__ == "__main__":
